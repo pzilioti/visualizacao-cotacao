@@ -1,7 +1,29 @@
 from django.test import TestCase
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+
+from visualiza.models import Quotation
 from .service import ValidationService
 
+class DBTests(TestCase):
+
+	def setUp(self):
+		q = Quotation(date=datetime.strptime("20211126", "%Y%m%d").date(), currency="BRL", value=10)
+		q.save()
+
+	def tearDown(self):
+		Quotation.objects.all().delete()
+
+	def test_get_from_db(self):
+		svc = ValidationService()
+		res = svc._ValidationService__get_values_from_db(date=datetime.strptime("20211126", "%Y%m%d").date(), currency="BRL")
+		self.assertEqual(res.date, datetime.strptime("20211126", "%Y%m%d").date())
+		self.assertEqual(res.currency, "BRL")
+		self.assertEqual(res.value, 10)
+
+	def test_get_fail_from_db(self):
+		svc = ValidationService()
+		res = svc._ValidationService__get_values_from_db(date=datetime.strptime("20211126", "%Y%m%d").date(), currency="EUR")
+		self.assertIsNone(res)
 
 class ParametersTests(TestCase):
 

@@ -30,7 +30,9 @@ class ValidationService():
 		aux_date = self.end_date
 		while(aux_date >= self.start_date):
 			value = self.__get_values_from_db(aux_date, self.currency)
-			if (not value): value = self.__get_values_from_api(aux_date)
+			if (not value):
+				logging.debug(f"Date {aux_date} for {self.currency} still does not exists in DB. Getting from API")
+				value = self.__get_values_from_api(aux_date)
 			values_list.append(value)
 			aux_date = aux_date - timedelta(days=1)
 		return values_list
@@ -41,7 +43,6 @@ class ValidationService():
 			logging.debug(result)
 			return result
 		except Quotation.DoesNotExist as err:
-			logging.debug(f"Date {date} for {currency} still does not exists in DB. Getting from API")
 			return None
 		
 		
