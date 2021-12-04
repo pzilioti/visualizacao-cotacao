@@ -7,7 +7,8 @@ from .service import ValidationService
 def index(request):
 	svc = ValidationService()
 	if(svc.is_valid()):
-		return HttpResponse("Valid!!!")
+		values_list = svc.get_list_values()
+		return HttpResponse(f"Valid!!! {values_list}")
 	else:
 		return HttpResponse("Invalid!!")
 

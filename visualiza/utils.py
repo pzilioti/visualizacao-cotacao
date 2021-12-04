@@ -15,6 +15,9 @@ def validate_dates(start_date:datetime, end_date:datetime):
 	if(start_date >= end_date):
 		logging.warning("Invalid dates - start is equal or greater than end")
 		return None, None
+	if(end_date > datetime.now()):
+		logging.warning("Invalid dates - end is in the future")
+		return None, None
 
 	workdays = 0
 	#if end date is on a weekend, go back to friday

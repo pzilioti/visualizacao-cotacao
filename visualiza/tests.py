@@ -44,7 +44,7 @@ class ParametersTests(TestCase):
 
     def test_invalid_dates(self):
         # end in the future
-        svc = ValidationService(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=1))
+        svc = ValidationService(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=6))
         self.assertIs(svc.is_valid(), False)
         # end before start
         svc = ValidationService(start_date=datetime.strptime(

@@ -1,4 +1,5 @@
 #!/bin/bash
+python manage.py makemigrations visualiza
 python manage.py test visualiza
 status=$?
 
