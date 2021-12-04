@@ -3,7 +3,7 @@ import logging
 import sys
 from .utils import validate_dates, validate_currency
 
-class Service():
+class ValidationService():
 	logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout, level=logging.DEBUG)
 
 	def __init__(self, currency=None, start_date=None, end_date=None):
