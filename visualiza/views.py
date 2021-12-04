@@ -23,8 +23,8 @@ def partial(request, currency):
 
 def full(request, currency, start_date, end_date):
 	try:
-		start_date = datetime.strptime(start_date, "%Y%m%d")
-		end_date = datetime.strptime(end_date, "%Y%m%d")
+		start_date = datetime.strptime(start_date, "%Y%m%d").date()
+		end_date = datetime.strptime(end_date, "%Y%m%d").date()
 		svc = ValidationService(currency=currency, start_date=start_date, end_date=end_date)
 		if(svc.is_valid()):
 			return HttpResponse(f"Test. Currency: {currency}, from {start_date} to {end_date}")

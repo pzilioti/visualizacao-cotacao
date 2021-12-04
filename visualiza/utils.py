@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import logging
 import sys
 
@@ -7,15 +7,15 @@ logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout, level=l
 
 def validate_currency(currency:str):
 	if currency.upper() in ["BRL", "EUR", "JPY"]:
-		return currency
+		return currency.upper()
 	else:
 		return None
 
-def validate_dates(start_date:datetime, end_date:datetime):
+def validate_dates(start_date:date, end_date:date):
 	if(start_date >= end_date):
 		logging.warning("Invalid dates - start is equal or greater than end")
 		return None, None
-	if(end_date > datetime.now()):
+	if(end_date > datetime.now().date()):
 		logging.warning("Invalid dates - end is in the future")
 		return None, None
 
