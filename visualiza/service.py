@@ -6,10 +6,38 @@ import requests
 from .utils import validate_dates, validate_currency
 from .models import Quotation
 
+class ApiService():
+	logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout, level=logging.DEBUG)
+
+	def __init__(self, date):
+		logging.debug(f"Received date {date}")
+		self.date = date
+
+	def get_rates_from_db(self):
+		try:
+			result = Quotation.objects.filter(date=self.date).all()
+			if not result:
+				return {"error": "this date does not have rates in de DB yet"}
+			res = {
+				"date": self.date,
+				"values": []
+			}
+			for r in result:
+				logging.debug(r)
+				res.get("values").append({
+					"currency": r.currency,
+					"rate": r.value
+				})
+			return res
+		except Quotation.DoesNotExist as err:
+			return {"error": "this date does not have rates in de DB yet"}
+
+
 class ValidationService():
 	logging.basicConfig(format='%(asctime)s %(message)s', stream=sys.stdout, level=logging.DEBUG)
 
 	def __init__(self, currency=None, start_date=None, end_date=None):
+		logging.debug(f"Received values {currency}, {start_date}, {end_date}")
 		currency = currency if currency else "BRL"
 		end_date = end_date if end_date else datetime.now().date()
 		#if current day is in a weekend, the number os days to subtract to get 5 workdays should be greater than 5
