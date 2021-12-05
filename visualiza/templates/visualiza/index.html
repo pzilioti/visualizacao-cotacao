@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Visualiza</title>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+
+<body>
+
+	<div id="container"></div>
+
+	{% load static %}
+	{% if values_list %}
+		{{ values_list|json_script:"values" }}
+		<script src={% static 'visualiza/script.js' %}></script>
+	{% endif %}
+	
+	<a href="{% url 'full' 'EUR' '20211129' '20211203' %}">Nova pesquisa</a>	
+
+</body>
+
+</html>

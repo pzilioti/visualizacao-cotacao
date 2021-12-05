@@ -1,3 +1,4 @@
+from django.core import serializers
 from datetime import datetime, timedelta
 import logging
 import sys
@@ -36,7 +37,8 @@ class ValidationService():
 				value = self.__get_values_from_api(aux_date, self.currency)
 			values_list.append(value)
 			aux_date = aux_date - timedelta(days=1)
-		return values_list
+		
+		return serializers.serialize('json', values_list)
 
 	def __get_values_from_db(self, date, currency):
 		try:

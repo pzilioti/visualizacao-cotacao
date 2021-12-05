@@ -4,6 +4,32 @@ from datetime import datetime, timedelta, date
 from visualiza.models import Quotation
 from .service import ValidationService
 
+class ListTests(TestCase):
+	def test_get_list(self):
+		svc = ValidationService()
+		list = svc.get_list_values()
+		for l in list:
+			self.assertIsNotNone(l)			
+
+
+class APITests(TestCase):
+	def tearDown(self):
+		Quotation.objects.all().delete()
+
+	def test_get_from_api(self):
+		svc = ValidationService()
+		res = svc._ValidationService__get_values_from_api(date=datetime.strptime("20211126", "%Y%m%d").date(), currency="BRL")
+		self.assertEqual(res.date, datetime.strptime("20211126", "%Y%m%d").date())
+		self.assertEqual(res.currency, "BRL")
+		#validates if it saves to DB
+		self.assertEqual(Quotation.objects.all().count(), 3)
+
+	def test_get_fail_from_api(self):
+		svc = ValidationService()
+		res = svc._ValidationService__get_values_from_api(date=datetime.strptime("20211126", "%Y%m%d").date(), currency="GBP")
+		self.assertIsNone(res)
+		
+
 class DBTests(TestCase):
 
 	def setUp(self):
