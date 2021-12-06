@@ -43,7 +43,8 @@ class ValidationService():
 		#if current day is in a weekend, the number os days to subtract to get 5 workdays should be greater than 5
 		#if current day is saturday it will subtract 6 days, is it's a sunday, it will subtract 7 days
 		#this way the default dates when none is given should always be right
-		num_day = 5 + (end_date.weekday() - 4 if end_date.weekday() in [5,6] else 0)
+		#num_day = 5 + (end_date.weekday() - 4 if end_date.weekday() in [5,6] else 0)
+		num_day = 4 if end_date.weekday() == 4 else 6
 		start_date = start_date if start_date else datetime.now().date() - timedelta(days=num_day)
 		
 		self.start_date, self.end_date = validate_dates(start_date, end_date)
