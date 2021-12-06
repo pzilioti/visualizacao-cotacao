@@ -40,6 +40,10 @@ class ValidationService():
 		logging.debug(f"Received values {currency}, {start_date}, {end_date}")
 		currency = currency if currency else "BRL"
 		end_date = end_date if end_date else datetime.now().date()
+		if not end_date and datetime.now().weekday() == 5:
+			end_date = datetime.now().date() - timedelta(days=1)
+		elif not end_date and datetime.now().weekday() == 6:
+			end_date = datetime.now().date() - timedelta(days=2)
 		#if current day is in a weekend, the number os days to subtract to get 5 workdays should be greater than 5
 		#if current day is saturday it will subtract 6 days, is it's a sunday, it will subtract 7 days
 		#this way the default dates when none is given should always be right
@@ -60,11 +64,12 @@ class ValidationService():
 		values_list = []
 		aux_date = self.end_date
 		while(aux_date >= self.start_date):
-			value = self.__get_values_from_db(aux_date, self.currency)
-			if (not value):
-				logging.debug(f"Date {aux_date} for {self.currency} still does not exists in DB. Getting from API")
-				value = self.__get_values_from_api(aux_date, self.currency)
-			values_list.append(value)
+			if(not aux_date.weekday() in [5 ,6]):
+				value = self.__get_values_from_db(aux_date, self.currency)
+				if (not value):
+					logging.debug(f"Date {aux_date} for {self.currency} still does not exists in DB. Getting from API")
+					value = self.__get_values_from_api(aux_date, self.currency)
+				values_list.append(value)
 			aux_date = aux_date - timedelta(days=1)
 		
 		return serializers.serialize('json', values_list)
